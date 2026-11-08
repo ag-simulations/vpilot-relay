@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>Your VATSIM radio, on your phone.</b><br>
-  Get controller messages on Telegram and reply from anywhere — even when you're away from your PC.
+  Get controller messages on Telegram and reply from anywhere.
 </p>
 
 <p align="center">
