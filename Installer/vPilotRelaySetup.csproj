@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- vPilot Relay setup wizard: a single .exe with the plugin and the settings template embedded.
+       Build the plugin (Release) first; build.ps1 does both. Version comes from ..\Directory.Build.props. -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>vPilotRelaySetup</AssemblyName>
+    <RootNamespace>VpilotRelaySetup</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Product>vPilot Relay</Product>
+    <AssemblyTitle>vPilot Relay Kurulumu</AssemblyTitle>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <PluginBuildDir Condition="'$(PluginBuildDir)' == ''">..\bin\Release\net48\</PluginBuildDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(PluginBuildDir)vPilotRelay.dll" LogicalName="Payload.vPilotRelay.dll" />
+    <EmbeddedResource Include="..\vPilotRelay.ini" LogicalName="Payload.vPilotRelay.ini" />
+    <Resource Include="Assets\app.ico" />
+    <Resource Include="Assets\logo-badge.png" />
+    <Resource Include="Assets\logo-mark.png" />
+    <Resource Include="Assets\agsim-dark.png" />
+    <!-- originals (Assets\source) and the generator script (make-assets.ps1) are not shipped -->
+    <None Remove="Assets\**" />
+  </ItemGroup>
+
+  <Target Name="CheckPluginBuilt" BeforeTargets="BeforeBuild">
+    <Error Condition="!Exists('$(PluginBuildDir)vPilotRelay.dll')"
+           Text="Plugin not built: $(PluginBuildDir)vPilotRelay.dll. Build the plugin in Release first (build.ps1 does both)." />
+  </Target>
+
+</Project>

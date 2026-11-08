@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>vPilotRelay</AssemblyName>
+    <RootNamespace>VpilotRelay</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <!-- vPilot is a 32-bit process and ships a 32-bit SimConnect -->
+    <PlatformTarget>x86</PlatformTarget>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <!-- vPilot install folder; if it is elsewhere: dotnet build -p:VpilotDir="D:\vPilot" -->
+    <VpilotDir Condition="'$(VpilotDir)' == ''">$(LOCALAPPDATA)\vPilot</VpilotDir>
+  </PropertyGroup>
+
+  <!-- The setup wizard is a separate project. -->
+  <ItemGroup>
+    <Compile Remove="Installer\**" />
+    <EmbeddedResource Remove="Installer\**" />
+    <None Remove="Installer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="RossCarlson.Vatsim.Vpilot.Plugins">
+      <HintPath>$(VpilotDir)\RossCarlson.Vatsim.Vpilot.Plugins.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(VpilotDir)\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.FlightSimulator.SimConnect">
+      <HintPath>$(VpilotDir)\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+
+</Project>

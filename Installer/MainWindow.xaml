@@ -1,0 +1,529 @@
+<Window x:Class="VpilotRelaySetup.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:VpilotRelaySetup"
+        Title="vPilot Relay Setup" Width="980" Height="690"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
+        FontFamily="{StaticResource UiFont}" Foreground="{StaticResource InkBrush}"
+        TextOptions.TextFormattingMode="Display" UseLayoutRounding="True"
+        Icon="Assets/app.ico">
+
+    <Grid x:Name="Root" Margin="20">
+        <!-- Shadow lives on its own layer so text is not rasterized by the effect. -->
+        <Border CornerRadius="14" Background="{StaticResource CanvasBrush}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="26" ShadowDepth="6" Direction="270" Opacity="0.28" Color="#0C192B"/>
+            </Border.Effect>
+        </Border>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="272"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ================= Sidebar ================= -->
+            <Border CornerRadius="14,0,0,14" MouseLeftButtonDown="DragWindow">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.6,1">
+                        <GradientStop Color="#0B1726" Offset="0"/>
+                        <GradientStop Color="#18324F" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ClipToBounds="True">
+                    <!-- decorative product mark -->
+                    <Image Source="Assets/logo-mark.png" Width="250" Opacity="0.05" RenderOptions.BitmapScalingMode="HighQuality"
+                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-62,-48"/>
+
+                    <Grid Margin="28,30,24,26">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/logo-mark.png" Width="44" Height="44" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <StackPanel Margin="13,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="vPilot Relay" FontSize="17" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Setup wizard" FontSize="12.5" Foreground="#8FA3BD" Margin="0,1,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <ItemsControl x:Name="StepList" Grid.Row="1" Margin="0,46,0,0" Focusable="False"
+                                      ItemTemplate="{StaticResource StepTemplate}"/>
+
+                        <StackPanel Grid.Row="2">
+                            <TextBlock FontSize="12" Foreground="#8FA3BD">
+                                <Hyperlink NavigateUri="https://ag-simulations.com" RequestNavigate="Hyperlink_RequestNavigate"
+                                           Foreground="#8FA3BD" TextDecorations="{x:Null}" ToolTip="ag-simulations.com">AG Simulations</Hyperlink>
+                            </TextBlock>
+                            <TextBlock x:Name="VersionText" Text="Version" FontSize="12" Foreground="#55677F" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- ================= Content ================= -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="46"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- title bar -->
+                <Grid Background="Transparent" MouseLeftButtonDown="DragWindow">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0">
+                        <Button Style="{StaticResource ChromeButton}" Click="Minimize_Click" ToolTip="Minimize">
+                            <TextBlock Text="&#xE921;" Style="{StaticResource Icon}" FontSize="10"/>
+                        </Button>
+                        <Button Style="{StaticResource CloseButton}" Click="Close_Click" ToolTip="Close" Margin="2,0,0,0">
+                            <TextBlock Text="&#xE8BB;" Style="{StaticResource Icon}" FontSize="10"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="46,0,46,12">
+
+                    <!-- ===== 0. Welcome ===== -->
+                    <Grid x:Name="PageWelcome">
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,0,20">
+                            <Image Source="Assets/logo-badge.png" Width="88" Height="88" HorizontalAlignment="Left"
+                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Effect>
+                                    <DropShadowEffect BlurRadius="18" ShadowDepth="4" Direction="270" Opacity="0.25" Color="#112238"/>
+                                </Image.Effect>
+                            </Image>
+                            <TextBlock Style="{StaticResource H1}" FontSize="30" Margin="0,22,0,0" Text="Welcome to vPilot Relay"/>
+                            <TextBlock Style="{StaticResource Lead}" MaxWidth="540" HorizontalAlignment="Left"
+                                       Text="Never miss a VATSIM controller, even when you're away from your PC. This wizard installs the plugin into vPilot and helps you set up your Telegram bot."/>
+
+                            <UniformGrid Columns="3" Margin="-6,26,-6,0">
+                                <Border Style="{StaticResource Card}" Margin="6">
+                                    <StackPanel>
+                                        <Border Style="{StaticResource IconBadge}">
+                                            <TextBlock Text="&#xE715;" Style="{StaticResource Icon}" FontSize="17" Foreground="{StaticResource PrimaryBrush}"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource ItemTitle}" Margin="0,12,0,0" Text="Alerts on your phone"/>
+                                        <TextBlock Style="{StaticResource Body}" FontSize="12.5" LineHeight="18"
+                                                   Text="Private messages, radio calls addressed to you and SELCAL arrive instantly."/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource Card}" Margin="6">
+                                    <StackPanel>
+                                        <Border Style="{StaticResource IconBadge}">
+                                            <TextBlock Text="&#xE8BD;" Style="{StaticResource Icon}" FontSize="17" Foreground="{StaticResource PrimaryBrush}"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource ItemTitle}" Margin="0,12,0,0" Text="Reply from your phone"/>
+                                        <TextBlock Style="{StaticResource Body}" FontSize="12.5" LineHeight="18"
+                                                   Text="Reply to a notification and your answer goes straight to the controller."/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource Card}" Margin="6">
+                                    <StackPanel>
+                                        <Border Style="{StaticResource IconBadge}">
+                                            <TextBlock Text="&#xE8EA;" Style="{StaticResource Icon}" FontSize="17" Foreground="{StaticResource PrimaryBrush}"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource ItemTitle}" Margin="0,12,0,0" Text="Remote control"/>
+                                        <TextBlock Style="{StaticResource Body}" FontSize="12.5" LineHeight="18"
+                                                   Text="Tune radios, set squawk, request METARs, connect to VATSIM."/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,22,0,0">
+                                <TextBlock Text="&#xE823;" Style="{StaticResource Icon}" FontSize="14" Foreground="{StaticResource MutedBrush}"/>
+                                <TextBlock Style="{StaticResource Small}" Margin="8,0,0,0" VerticalAlignment="Center"
+                                           Text="Takes about 3 minutes. You need vPilot installed and a Telegram account."/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- ===== 1. vPilot ===== -->
+                    <StackPanel x:Name="PageVpilot" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource Overline}" Text="STEP 1 / 5"/>
+                        <TextBlock Style="{StaticResource H1}" Text="Let's find vPilot"/>
+                        <TextBlock Style="{StaticResource Lead}" Text="The plugin will be installed into vPilot's Plugins folder."/>
+
+                        <Border Style="{StaticResource Card}" Margin="0,22,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Label}" Text="vPilot folder"/>
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="VpilotPath" Style="{StaticResource InputBox}" IsReadOnly="True" FontSize="13"/>
+                                    <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Margin="10,0,0,0" Click="BrowseVpilot_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE838;" Style="{StaticResource Icon}" FontSize="14"/>
+                                            <TextBlock Text="Change…" Margin="8,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+
+                                <Rectangle Height="1" Fill="{StaticResource LineBrush}" Margin="0,18,0,14"/>
+
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <ContentControl x:Name="ExeIcon" Focusable="False" VerticalAlignment="Top"/>
+                                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ExeTitle" Style="{StaticResource ItemTitle}" FontSize="14"/>
+                                        <TextBlock x:Name="ExeDetail" Style="{StaticResource Small}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <ContentControl x:Name="ApiIcon" Focusable="False" VerticalAlignment="Top"/>
+                                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ApiTitle" Style="{StaticResource ItemTitle}" FontSize="14"/>
+                                        <TextBlock x:Name="ApiDetail" Style="{StaticResource Small}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <ContentControl x:Name="RunIcon" Focusable="False" VerticalAlignment="Top"/>
+                                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="RunTitle" Style="{StaticResource ItemTitle}" FontSize="14"/>
+                                        <TextBlock x:Name="RunDetail" Style="{StaticResource Small}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel x:Name="RunActions" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                                        <Button x:Name="CloseVpilotButton" Style="{StaticResource SecondaryButton}" Padding="12,7" FontSize="13" Click="CloseVpilot_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE7E8;" Style="{StaticResource Icon}" FontSize="13"/>
+                                                <TextBlock x:Name="CloseVpilotText" Text="Close vPilot" Margin="7,0,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource GhostButton}" Margin="4,0,0,0" Click="Recheck_Click" ToolTip="Check again">
+                                            <TextBlock Text="&#xE72C;" Style="{StaticResource Icon}" FontSize="14"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="ExistingCard" Margin="0,14,0,0" CornerRadius="12" Padding="16,14" Background="#EDF5FA"
+                                BorderBrush="#C9DFEC" BorderThickness="1" Visibility="Collapsed">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="&#xE946;" Style="{StaticResource Icon}" FontSize="18" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Top" Margin="2,2,0,0"/>
+                                <StackPanel Grid.Column="1" Margin="14,0,12,0">
+                                    <TextBlock x:Name="ExistingTitle" Style="{StaticResource ItemTitle}" FontSize="14" Text="Existing installation found"/>
+                                    <TextBlock Style="{StaticResource Small}" Margin="0,3,0,0"
+                                               Text="Your Telegram settings are already there. Skip the bot steps and just update the plugin."/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Padding="14,8" FontSize="13" VerticalAlignment="Center"
+                                        Click="KeepExisting_Click" Content="Keep settings, update"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- ===== 2. Create bot ===== -->
+                    <StackPanel x:Name="PageBot" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource Overline}" Text="STEP 2 / 5"/>
+                        <TextBlock Style="{StaticResource H1}" Text="Create your Telegram bot"/>
+                        <TextBlock Style="{StaticResource Lead}" Text="Notifications come through a bot of your own. Telegram's BotFather creates one in a minute, for free."/>
+
+                        <StackPanel Margin="0,22,0,0">
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource NumBadge}"><TextBlock Style="{StaticResource NumText}" Text="1"/></Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Style="{StaticResource ItemTitle}" Text="Open BotFather"/>
+                                    <TextBlock Style="{StaticResource Body}" Text="Telegram's official bot manager. It has a blue verified check next to its name."/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                        <Button Style="{StaticResource TelegramButton}" Padding="14,8" FontSize="13" Click="OpenBotFather_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE724;" Style="{StaticResource Icon}" FontSize="13"/>
+                                                <TextBlock Text="Open BotFather" Margin="8,0,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource SecondaryButton}" Padding="14,8" FontSize="13" Margin="8,0,0,0" Click="OpenTelegramWeb_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE774;" Style="{StaticResource Icon}" FontSize="13"/>
+                                                <TextBlock Text="Telegram Web" Margin="8,0,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource NumBadge}"><TextBlock Style="{StaticResource NumText}" Text="2"/></Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Style="{StaticResource ItemTitle}" Text="Send the new bot command"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                        <Border Background="{StaticResource SubtleBrush}" CornerRadius="6" Padding="10,4" VerticalAlignment="Center">
+                                            <TextBlock Text="/newbot" FontFamily="{StaticResource MonoFont}" FontSize="13.5" Foreground="{StaticResource InkBrush}"/>
+                                        </Border>
+                                        <Button Style="{StaticResource GhostButton}" Margin="6,0,0,0" Click="CopyNewBot_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Name="CopyNewBotIcon" Text="&#xE8C8;" Style="{StaticResource Icon}" FontSize="13"/>
+                                                <TextBlock x:Name="CopyNewBotText" Text="Copy" Margin="7,0,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource NumBadge}"><TextBlock Style="{StaticResource NumText}" Text="3"/></Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Style="{StaticResource ItemTitle}" Text="Choose a name and a username"/>
+                                    <TextBlock Style="{StaticResource Body}">
+                                        First the display name (e.g. <Run FontWeight="SemiBold">vPilot Relay</Run>), then a unique username ending in <Run FontWeight="SemiBold">bot</Run> (e.g. <Run FontWeight="SemiBold">my_vpilot_bot</Run>).
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource NumBadge}"><TextBlock Style="{StaticResource NumText}" Text="4"/></Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Style="{StaticResource ItemTitle}" Text="Copy the token"/>
+                                    <TextBlock Style="{StaticResource Body}">
+                                        BotFather sends a token like <Run FontFamily="{StaticResource MonoFont}" FontSize="12.5">123456789:AAH…</Run> — you'll paste it in the next step.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <Border Margin="0,20,0,0" CornerRadius="10" Padding="14,10" Background="{StaticResource SubtleBrush}">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="&#xE82F;" Style="{StaticResource Icon}" FontSize="15" Foreground="#D97706" VerticalAlignment="Top" Margin="0,1,0,0"/>
+                                <TextBlock Grid.Column="1" Style="{StaticResource Small}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                           Text="Tip: if Telegram is only on your phone, Telegram Web is the easiest way to get the token onto this PC."/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- ===== 3. Token ===== -->
+                    <StackPanel x:Name="PageToken" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource Overline}" Text="STEP 3 / 5"/>
+                        <TextBlock Style="{StaticResource H1}" Text="Paste your bot token"/>
+                        <TextBlock Style="{StaticResource Lead}" Text="Paste the token BotFather sent you. Pasting the whole message is fine too; I'll pick the token out of it."/>
+
+                        <Border Style="{StaticResource Card}" Margin="0,22,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Label}" Text="Bot token"/>
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TokenBox" Style="{StaticResource InputBox}" FontFamily="{StaticResource MonoFont}" FontSize="13.5"
+                                             TextChanged="TokenBox_TextChanged"/>
+                                    <TextBlock x:Name="TokenPlaceholder" Text="123456789:AAH4k…" FontFamily="{StaticResource MonoFont}" FontSize="13.5"
+                                               Foreground="{StaticResource MutedBrush}" Margin="14,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                    <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Margin="10,0,0,0" Click="PasteToken_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE77F;" Style="{StaticResource Icon}" FontSize="14"/>
+                                            <TextBlock Text="Paste" Margin="8,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+
+                                <Border x:Name="TokenStatus" Margin="0,14,0,0" CornerRadius="10" Padding="12,10" Visibility="Collapsed">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <ContentControl x:Name="TokenStatusIcon" Focusable="False" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock x:Name="TokenStatusTitle" Style="{StaticResource ItemTitle}" FontSize="14"/>
+                                            <TextBlock x:Name="TokenStatusDetail" Style="{StaticResource Small}" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Margin="2,18,0,0">
+                            <TextBlock Text="&#xE72E;" Style="{StaticResource Icon}" FontSize="14" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Top" Margin="0,1,0,0"/>
+                            <TextBlock Style="{StaticResource Small}" Margin="10,0,0,0" MaxWidth="520"
+                                       Text="The token is like your bot's password; don't share it. It's only saved in the plugin's settings file on this PC."/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- ===== 4. Chat ID ===== -->
+                    <StackPanel x:Name="PageChat" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource Overline}" Text="STEP 4 / 5"/>
+                        <TextBlock Style="{StaticResource H1}" Text="Let's find your account"/>
+                        <TextBlock Style="{StaticResource Lead}" Text="So that notifications only go to you, I need to know your Telegram account. Just send your bot a message."/>
+
+                        <StackPanel Margin="0,22,0,0">
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource NumBadge}"><TextBlock Style="{StaticResource NumText}" Text="1"/></Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Style="{StaticResource ItemTitle}" Text="Open your bot in Telegram"/>
+                                    <TextBlock x:Name="ChatBotName" Style="{StaticResource Body}" Text="@bot"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Style="{StaticResource TelegramButton}" Padding="14,8" FontSize="13" VerticalAlignment="Center" Click="OpenBot_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE8A7;" Style="{StaticResource Icon}" FontSize="13"/>
+                                        <TextBlock Text="Open bot" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource NumBadge}"><TextBlock Style="{StaticResource NumText}" Text="2"/></Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Style="{StaticResource ItemTitle}" Text="Press &quot;Start&quot; or send any message"/>
+                                    <TextBlock Style="{StaticResource Body}" Text="I'll recognise you automatically as soon as it arrives."/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <Border x:Name="ListenCard" Style="{StaticResource Card}" Margin="0,20,0,0" Padding="18,16">
+                            <Grid>
+                                <Grid x:Name="ListenWaiting">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <Border Width="44" Height="44" CornerRadius="22" Background="{StaticResource PrimarySoftBrush}">
+                                        <local:Spinner Width="24" Height="24"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ListenTitle" Style="{StaticResource ItemTitle}" Text="Waiting for your message…"/>
+                                        <TextBlock x:Name="ListenDetail" Style="{StaticResource Small}" Margin="0,2,0,0" Text="Keep this window open; you'll see it here the moment you message your bot."/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid x:Name="ListenFound" Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <Border Width="44" Height="44" CornerRadius="22" Background="{StaticResource SuccessBrush}">
+                                        <TextBlock Text="&#xE73E;" Style="{StaticResource Icon}" FontSize="18" Foreground="White"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="FoundTitle" Style="{StaticResource ItemTitle}" FontSize="15.5" Text="Hi!"/>
+                                        <TextBlock x:Name="FoundDetail" Style="{StaticResource Small}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="2" Style="{StaticResource GhostButton}" VerticalAlignment="Center" Click="NotMe_Click" Content="That's not me"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Button x:Name="ManualToggle" Style="{StaticResource GhostButton}" HorizontalAlignment="Left" Margin="-10,10,0,0" Click="ManualToggle_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="ManualToggleIcon" Text="&#xE70D;" Style="{StaticResource Icon}" FontSize="10"/>
+                                <TextBlock Text="Enter the Chat ID manually" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <StackPanel x:Name="ManualPanel" Visibility="Collapsed" Margin="0,6,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <TextBox x:Name="ManualChatBox" Style="{StaticResource InputBox}" FontFamily="{StaticResource MonoFont}" Padding="12,8"/>
+                                <Button x:Name="ManualUseButton" Grid.Column="1" Style="{StaticResource SecondaryButton}" Padding="14,8" FontSize="13" Margin="8,0,0,0"
+                                        Click="ManualUse_Click" Content="Use"/>
+                                <TextBlock x:Name="ManualError" Grid.Column="2" Style="{StaticResource Small}" Foreground="#DC2626" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- ===== 5. Install ===== -->
+                    <Grid x:Name="PageInstall" Visibility="Collapsed">
+                        <StackPanel x:Name="InstallMain">
+                            <TextBlock Style="{StaticResource Overline}" Text="STEP 5 / 5"/>
+                            <TextBlock x:Name="InstallTitle" Style="{StaticResource H1}" Text="Ready to install"/>
+                            <TextBlock x:Name="InstallLead" Style="{StaticResource Lead}" Text="I'll install with the details below. If everything looks right, press Install."/>
+
+                            <Border x:Name="SummaryCard" Style="{StaticResource Card}" Margin="0,22,0,0" Padding="18,6">
+                                <StackPanel x:Name="SummaryList"/>
+                            </Border>
+
+                            <!-- replaces the summary once installing starts -->
+                            <Border x:Name="ProgressCard" Style="{StaticResource Card}" Margin="0,22,0,0" Padding="18,16,18,8" Visibility="Collapsed">
+                                <StackPanel x:Name="ProgressList"/>
+                            </Border>
+
+                            <Border x:Name="InstallError" Visibility="Collapsed" Margin="0,14,0,0" CornerRadius="10" Padding="16,12" Background="#FEE2E2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock x:Name="InstallErrorTitle" Style="{StaticResource ItemTitle}" FontSize="14" Foreground="#991B1B"/>
+                                        <TextBlock x:Name="InstallErrorDetail" Style="{StaticResource Small}" Foreground="#7F1D1D" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                    <Button x:Name="InstallCloseVpilot" Grid.Column="1" Style="{StaticResource SecondaryButton}" Padding="12,7" FontSize="13"
+                                            Margin="12,0,0,0" VerticalAlignment="Center" Click="InstallCloseVpilot_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE7E8;" Style="{StaticResource Icon}" FontSize="13"/>
+                                            <TextBlock x:Name="InstallCloseVpilotText" Text="Close vPilot" Margin="7,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- done -->
+                        <StackPanel x:Name="DonePanel" Visibility="Collapsed" VerticalAlignment="Center" Margin="0,0,0,10">
+                            <Border Width="84" Height="84" CornerRadius="42" Background="{StaticResource SuccessSoftBrush}" HorizontalAlignment="Left">
+                                <Border Width="58" Height="58" CornerRadius="29" Background="{StaticResource SuccessBrush}">
+                                    <TextBlock Text="&#xE73E;" Style="{StaticResource Icon}" FontSize="26" Foreground="White"/>
+                                </Border>
+                            </Border>
+                            <TextBlock Style="{StaticResource H1}" FontSize="30" Margin="0,20,0,0" Text="Installation complete!"/>
+                            <TextBlock x:Name="DoneLead" Style="{StaticResource Lead}" MaxWidth="540" HorizontalAlignment="Left"/>
+
+                            <Border Style="{StaticResource Card}" Margin="0,22,0,0" Padding="18,16">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource Label}" Text="WHAT'S NEXT?"/>
+                                    <Grid Margin="0,12,0,0">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource NumBadge}" Width="24" Height="24"><TextBlock Style="{StaticResource NumText}" FontSize="12" Text="1"/></Border>
+                                        <TextBlock Grid.Column="1" Style="{StaticResource Body}" Margin="0,2,0,0">
+                                            <Run FontWeight="SemiBold" Foreground="#0F172A">Start vPilot.</Run> The plugin loads automatically.
+                                        </TextBlock>
+                                    </Grid>
+                                    <Grid Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource NumBadge}" Width="24" Height="24"><TextBlock Style="{StaticResource NumText}" FontSize="12" Text="2"/></Border>
+                                        <TextBlock Grid.Column="1" Style="{StaticResource Body}" Margin="0,2,0,0">
+                                            You'll get <Run FontWeight="SemiBold" Foreground="#0F172A">"vPilot Relay is running"</Run> on Telegram.
+                                        </TextBlock>
+                                    </Grid>
+                                    <Grid Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource NumBadge}" Width="24" Height="24"><TextBlock Style="{StaticResource NumText}" FontSize="12" Text="3"/></Border>
+                                        <TextBlock Grid.Column="1" Style="{StaticResource Body}" Margin="0,2,0,0">
+                                            Send <Run FontFamily="{StaticResource MonoFont}" FontWeight="SemiBold" Foreground="#0F172A">/menu</Run> and control everything with buttons.
+                                        </TextBlock>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Button x:Name="LaunchButton" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,22,0,0" Click="Launch_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="LaunchIcon" Text="&#xE768;" Style="{StaticResource Icon}" FontSize="13"/>
+                                    <TextBlock x:Name="LaunchText" Text="Start vPilot" Margin="9,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <!-- footer -->
+                <Border Grid.Row="2" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Padding="46,16,46,18">
+                    <Grid>
+                        <!-- company logo, vertically centred on the buttons -->
+                        <Image x:Name="CompanyLogo" Source="Assets/agsim-dark.png" Height="26" HorizontalAlignment="Left" VerticalAlignment="Center"
+                               Opacity="0.9" Cursor="Hand" RenderOptions.BitmapScalingMode="HighQuality"
+                               ToolTip="AG Simulations · ag-simulations.com" MouseLeftButtonUp="CompanyLogo_Click"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="BackButton" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" Click="Back_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE72B;" Style="{StaticResource Icon}" FontSize="12"/>
+                                    <TextBlock Text="Back" Margin="9,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="NextButton" Style="{StaticResource PrimaryButton}" MinWidth="130" IsDefault="True" Click="Next_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="NextText" Text="Start"/>
+                                    <TextBlock x:Name="NextIcon" Text="&#xE72A;" Style="{StaticResource Icon}" FontSize="12" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

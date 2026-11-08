@@ -1,0 +1,9 @@
+<Project>
+  <!-- Shared by the plugin (vPilotRelay.csproj) and the setup wizard (Installer\). -->
+  <PropertyGroup>
+    <Version>1.0.2</Version>
+    <Company>AG Simulations</Company>
+    <Authors>AG Simulations</Authors>
+    <Copyright>© 2026 AG Simulations</Copyright>
+  </PropertyGroup>
+</Project>

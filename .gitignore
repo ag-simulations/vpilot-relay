@@ -1,0 +1,8 @@
+bin/
+obj/
+dist/
+.vs/
+*.user
+
+# Original logo files (AG Simulations trademarks) are not published.
+Installer/Assets/source/
