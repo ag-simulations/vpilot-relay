@@ -3,6 +3,7 @@
 #   logo-mark.png   the white mark only, transparent background (sidebar)
 #   agsim-dark.png  AG Simulations logo for light backgrounds, downscaled
 #   app.ico         Windows icon (rounded badge, 16..256 px)
+#   ..\..\docs\images\agsim-light.png  white AG Simulations logo for the README on dark backgrounds
 # Usage: powershell -ExecutionPolicy Bypass -File make-assets.ps1
 #
 # The original logos (.\source) are AG Simulations trademarks and are not in the public
@@ -95,6 +96,15 @@ $g.Clear([System.Drawing.Color]::Transparent)
 $g.DrawImage($ag, (New-Object System.Drawing.Rectangle 0, 0, $w, $h), $box, [System.Drawing.GraphicsUnit]::Pixel)
 $g.Dispose()
 $agSmall.Save((Join-Path $here 'agsim-dark.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+
+# White variant of the same logo for dark backgrounds (README on GitHub's dark theme).
+$agLight = New-Object System.Drawing.Bitmap $w, $h, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+for ($y = 0; $y -lt $h; $y++) { for ($x = 0; $x -lt $w; $x++) {
+    $agLight.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($agSmall.GetPixel($x, $y).A, 255, 255, 255)) } }
+$docs = Join-Path $here '..\..\docs\images'
+New-Item -ItemType Directory -Force $docs | Out-Null
+$agLight.Save((Join-Path $docs 'agsim-light.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+$agLight.Dispose()
 $agSmall.Dispose(); $ag.Dispose()
 
 # ---- app.ico (PNG-compressed entries) ----

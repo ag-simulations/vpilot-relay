@@ -1,259 +1,139 @@
-# vPilot Relay
+<p align="center">
+  <img src="Installer/Assets/logo-badge.png" width="128" alt="vPilot Relay logo">
+</p>
 
-**A vPilot plugin that forwards vPilot notifications to Telegram and lets you answer controllers from Telegram.**
+<h1 align="center">vPilot Relay</h1>
 
-Never miss a VATSIM controller, even when you're away from your PC: private messages, frequency messages addressed to you and SELCAL arrive on your phone.
-Reply to a notification to answer directly, or use `/menu` to tune radios, request METAR/ATIS and change your squawk.
+<p align="center">
+  <b>Your VATSIM radio, on your phone.</b><br>
+  Get controller messages on Telegram and reply from anywhere — even when you're away from your PC.
+</p>
 
-By [AG Simulations](https://ag-simulations.com). Free and open source under the [GPL-3.0](#license).
+<p align="center">
+  <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/ag-simulations/vpilot-relay?label=download&color=112238" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/platform-Windows-2B7AB0" alt="Windows">
+  <img src="https://img.shields.io/badge/vPilot-3.x-2B7AB0" alt="vPilot 3.x">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/ag-simulations/vpilot-relay?color=2B7AB0" alt="License"></a>
+</p>
 
-## Download
-
-Get the latest **`vPilotRelay-Setup-x.y.z.exe`** from the [Releases](../../releases/latest) page and run it — see [Easy install](#easy-install-recommended).
-
----
-
-## Features
-
-**Notifications on your phone**
-
-| Icon | Notification | Can you reply? |
-|---|---|---|
-| ✉️ | Private message (PM) | ✅ Reply → PM to the controller |
-| 📻❗ | Frequency message containing your callsign | ✅ Reply → sent on frequency |
-| 📻 | Other frequency messages (optional) | — |
-| 🔔 | SELCAL | — |
-| 📢 | Supervisor / broadcast message | — |
-| 🟢 / 🔴 | Connected to / disconnected from VATSIM | — |
-
-**`/menu` — button-based control menu**
-
-- ✉️ **Private message:** pick from nearby controllers or type a callsign
-- 📻 **Tune radio:** UNICOM 122.800 at the top, nearby ATC below — tap a button to set COM1 active, or ✍️ type a frequency yourself (COM2/standby included)
-- 📡 **Send on frequency:** text message on the active transmit frequency
-- 🗼 **Online ATC:** controllers in range with frequency and distance
-- 🌤 **METAR** and ℹ️ **ATIS / controller info**
-- 🔢 Set **squawk**, 🆔 **Ident**
-- 📊 **Status:** connection time, altitude, speed, heading, squawk, COM frequencies
-- 🔕 **Silent mode:** notifications arrive silently (PMs and SELCAL still make a sound)
-- 📻 **Radio alerts:** "mentions only" or "all"
-- 🟢 **Connect to VATSIM:** shown while disconnected — one tap with a recent connection, or callsign → aircraft type → SELCAL step by step
-- 🔌 **Disconnect** (shown while connected, asks for confirmation)
+<p align="center">
+  <a href="https://ag-simulations.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/images/agsim-light.png">
+      <img src="Installer/Assets/agsim-dark.png" height="26" alt="AG Simulations">
+    </picture>
+  </a>
+</p>
 
 ---
 
-## Requirements
+## ✨ Features
 
-- Windows, [vPilot](https://vpilot.rosscarlson.dev/) (3.x)
-- A Telegram account (Telegram app on your phone)
-- For radio/squawk/status features: MSFS 2020 / MSFS 2024 (SimConnect)
+| | |
+|---|---|
+| ✉️ **Private messages** | Arrive instantly — reply to the notification and it goes straight to the controller. |
+| 📻 **Frequency calls** | Text messages with your callsign are flagged, and you can answer on frequency. |
+| 🔔 **SELCAL & connection alerts** | Know when you're called, connected or disconnected. |
+| 🎛️ **Remote control** | Tune COM1 (UNICOM + nearby ATC), set squawk, ident, request METAR/ATIS, see online ATC. |
+| 🟢 **Connect from your phone** | One tap with a recent callsign, or enter callsign, aircraft type and SELCAL. |
+| 🔕 **Silent mode** | Quiet notifications — private messages and SELCAL still ring. |
 
----
+Everything is behind one command: **`/menu`**.
 
-## Easy install (recommended)
+<p align="center">
+  <img src="docs/images/setup-wizard.png" width="720" alt="vPilot Relay setup wizard">
+</p>
 
-1. **Close vPilot.**
-2. Download `vPilotRelay-Setup-x.y.z.exe` from [Releases](../../releases/latest) and run it.
-   If Windows says "Windows protected your PC", click **More info → Run anyway** (the installer is not code-signed).
-3. Follow the wizard:
-   - **vPilot:** finds your vPilot folder and offers to close vPilot if it's running.
-   - **Telegram bot:** shows you step by step how to create a bot with BotFather.
-   - **Bot token:** paste the token; the wizard checks it with Telegram. You can paste BotFather's whole message — it picks the token out.
-   - **Your account:** press "Start" in your bot; the wizard recognises you automatically, no need to look up your Chat ID.
-   - **Install:** copies the plugin to the `Plugins` folder, saves the settings and sends a test message to Telegram.
-4. **Start vPilot.** When `✈️ vPilot Relay is running.` arrives on Telegram, you're all set.
+## 🚀 Install in 3 minutes
 
-To update, just run the new version's installer: the wizard detects the existing installation and
-**"Keep settings, update"** skips the bot steps and only replaces the plugin. Your other settings (`[Relay]` section) are kept.
+The setup wizard does everything for you — **no files to copy, no settings to edit.**
 
----
+1. **Close vPilot** and download **`vPilotRelay-Setup-x.y.z.exe`** from the **[latest release](../../releases/latest)**.
+2. **Run it and follow the wizard.** It finds vPilot, walks you through creating your Telegram bot, checks your token and recognises your account automatically.
+3. **Start vPilot.** When *"✈️ vPilot Relay is running."* arrives on Telegram, you're ready.
 
-## Manual install
+> **Windows protected your PC?** The installer isn't code-signed yet — click **More info → Run anyway**.
 
-### 1. Create the Telegram bot
+**Requirements:** Windows · [vPilot](https://vpilot.rosscarlson.dev/) 3.x · a Telegram account · MSFS 2020/2024 for radio and squawk features.
 
-1. Open **@BotFather** in Telegram (the one with the blue verified check).
-2. Send `/newbot`.
-3. Give the bot a **name** (e.g. `My vPilot Bot`).
-4. Give it a **username** ending in `bot` (e.g. `my_vpilot_bot`).
-5. BotFather sends you a **token** like this:
-   ```
-   1234567890:AAH...a-long-string...
-   ```
-   Copy it. **Don't share it**: anyone with the token can control your bot.
+**Updating** is just as easy: run the new installer and choose **Keep settings, update**.
 
-> 💡 Tap the token in BotFather to copy it, so `l` (lowercase L) and `1`, or `O` and `0`, don't get mixed up.
+<details>
+<summary><b>Manual install</b></summary>
 
-### 2. Download and copy the plugin
+1. Create a bot with **@BotFather** in Telegram (`/newbot`) and copy its token.
+2. Close vPilot. From the release `.zip`, copy `vPilotRelay.dll` and `vPilotRelay.ini` to `%LOCALAPPDATA%\vPilot\Plugins`, then right-click the DLL → **Properties** → **Unblock**.
+3. Put the token on the `BotToken=` line of `vPilotRelay.ini`.
+4. Start vPilot and send your bot any message — it replies with your Chat ID. Close vPilot, put it on the `ChatId=` line, start vPilot again.
 
-1. **Close vPilot.**
-2. Download `vPilotRelay-x.y.z.zip` from [Releases](../../releases/latest) and extract it.
-3. Copy **`vPilotRelay.dll`** and **`vPilotRelay.ini`** into vPilot's `Plugins` folder:
-   ```
-   %LOCALAPPDATA%\vPilot\Plugins
-   ```
-   (Paste it into the File Explorer address bar and press Enter. It's usually `C:\Users\<your user name>\AppData\Local\vPilot\Plugins`.)
-4. **Unblock the DLL:** right-click `vPilotRelay.dll` → **Properties** → tick **"Unblock"** at the bottom if it's there → **OK**.
-   (Windows blocks DLLs downloaded from the internet; if you skip this, the plugin won't load.)
+</details>
 
-### 3. Put the token in the settings file
+## 💬 Usage
 
-Open `vPilotRelay.ini` in the `Plugins` folder with Notepad and paste the token:
+Swipe a notification (or long-press → **Reply**) to answer. Or send **`/menu`** for buttons.
 
-```ini
-[Telegram]
-BotToken=1234567890:AAH...
-ChatId=
-```
-
-Save.
-
-### 4. Get your Chat ID
-
-1. **Start vPilot.**
-2. Find your bot in Telegram (the username from step 1), open it and press **Start**.
-3. The bot replies:
-   ```
-   Your Chat ID: 123456789
-   ```
-4. **Close vPilot**, put this number on the `ChatId=` line of `vPilotRelay.ini` and save:
-   ```ini
-   ChatId=123456789
-   ```
-5. **Start vPilot again.** When this arrives on Telegram, you're done:
-   ```
-   ✈️ vPilot Relay is running.
-   ```
-
-These settings are kept in the file; you don't need to enter them again.
-
-> 🔒 The bot only listens to the chat in `ChatId`. Even if someone else finds your bot and messages it, none of their commands will work.
-
----
-
-## Usage
-
-### Replying to a controller
-
-When a `✉️ EGLL_TWR ...` notification arrives, **swipe it left** (or long-press → **Reply**) and type your answer.
-The bot confirms with `✅ Sent → EGLL_TWR`. Reply to the confirmation to keep the conversation going.
-
-### Commands
+<details>
+<summary><b>All commands</b></summary>
 
 | Command | What it does |
 |---|---|
 | `/menu` | Main menu with buttons |
-| `/connect BAW123 B738 AB-CD` | Connects to VATSIM (SELCAL optional; the bot asks for anything missing) |
-| `/pm EGLL_TWR message` | Sends a private message |
-| `/radio message` | Sends on the active TX frequency |
-| `/freq 118.100` | Sets COM1 active |
-| `/freq 121.800 s` | COM1 standby |
-| `/freq 124.350 2` | COM2 active (`2 s` → COM2 standby) |
+| `/connect BAW123 B738 AB-CD` | Connect to VATSIM (SELCAL optional) |
+| `/pm EGLL_TWR message` | Private message |
+| `/radio message` | Send on the active TX frequency |
+| `/freq 118.100` · `121.800 s` · `124.350 2` | COM1 active · COM1 standby · COM2 active |
 | `/atc` | Online ATC nearby |
-| `/metar EGLL` | METAR |
-| `/atis EGLL_ATIS` | ATIS / controller info |
-| `/squawk 1234` | Transponder code |
-| `/ident` | Squawk ident |
+| `/metar EGLL` · `/atis EGLL_ATIS` | METAR · ATIS / controller info |
+| `/squawk 1234` · `/ident` | Transponder code · ident |
 | `/status` | Aircraft and connection status |
 | `/mute` | Toggle notification sound |
-| `/help` | Command list |
 
-Telegram also lists the commands when you type `/`.
+**Radio alerts:** *mentions only* (default) relays frequency messages containing your callsign; *all* relays every text message on your frequencies. Voice is never relayed.
 
-### "Radio alerts: mentions only / all"
+</details>
 
-- **Mentions only** (default): you only get frequency text messages **containing your callsign**.
-- **All:** you get **every** text message on the frequencies you're monitoring (can be a lot in busy areas).
-
-Voice is never relayed in either mode; only text messages.
-
----
-
-## Settings file (`vPilotRelay.ini`)
+<details>
+<summary><b>Settings (<code>vPilotRelay.ini</code>)</b></summary>
 
 ```ini
 [Telegram]
 BotToken=          ; token from @BotFather
-ChatId=            ; Chat ID the bot tells you
+ChatId=            ; your Telegram chat
 
 [Relay]
 Private=true       ; private messages
 Radio=true         ; frequency text messages
-RadioMode=mentions ; mentions = mentions only, all = everything
-Selcal=true        ; SELCAL
-Broadcast=true     ; broadcast messages
+RadioMode=mentions ; mentions | all
+Selcal=true
+Broadcast=true     ; supervisor / server broadcasts
 Connection=true    ; connected / disconnected
 ```
 
-Changes take effect after restarting vPilot. "Silent mode" and "Radio alerts" changed from the menu apply to the current session.
+Changes apply after restarting vPilot. The bot only obeys the chat in `ChatId`.
 
----
+</details>
 
-## Troubleshooting
+<details>
+<summary><b>Troubleshooting</b></summary>
 
 | Problem | Fix |
 |---|---|
-| The bot doesn't answer at all | Is vPilot running? The bot only answers while vPilot is running. |
-| No "is running" message | Run the setup wizard again. If you installed manually: are `BotToken` and `ChatId` correct? Is the DLL unblocked? |
-| The plugin doesn't load | If `RossCarlson.Vatsim.Vpilot.Plugins.dll` or `.xml` is in the `Plugins` folder, delete it (some plugin installers leave it there and it breaks vPilot plugins). |
-| Error details | Look for lines starting with `[vPilot Relay]` in vPilot's message/debug window. |
-| ⚠️ "The simulator shows a different frequency" | Some add-on aircraft use their own radio system and ignore external frequency/squawk commands. Tune from the cockpit instead. |
-| "Could not connect to the simulator" | The simulator must be running with a flight loaded. |
+| The bot doesn't answer | It only works while vPilot is running. |
+| No "is running" message | Run the setup wizard again. |
+| The plugin doesn't load | Delete `RossCarlson.Vatsim.Vpilot.Plugins.dll`/`.xml` from the `Plugins` folder if present. |
+| Frequency or squawk didn't change | Some add-on aircraft ignore external radio commands — set it in the cockpit. |
+| "Could not connect to the simulator" | Start the simulator and load a flight. |
 
-**Known limitations**
+Details are logged in vPilot's debug window, prefixed with `[vPilot Relay]`.
 
-- vPilot's plugin interface can't change frequencies; frequency and squawk are sent to the simulator directly via SimConnect.
-- The "Online ATC" list is made of the controllers vPilot sees in range.
-- Messages sent to the bot while vPilot is closed are **not** sent to controllers when vPilot starts (so old messages aren't sent by mistake).
+</details>
 
----
+## 📄 License
 
-## Building from source
+Free and open source under the [GNU GPL v3.0](LICENSE) — © 2026 [AG Simulations](https://ag-simulations.com).
 
-Requirements: [.NET SDK](https://dotnet.microsoft.com/download) 8 or later and vPilot installed on the machine (vPilot's DLLs are referenced, not included in the repository).
-
-```powershell
-powershell -ExecutionPolicy Bypass -File build.ps1
-```
-
-Output:
-
-```
-dist\vPilotRelay-<version>\     vPilotRelay-Setup-<version>.exe, vPilotRelay.dll, vPilotRelay.ini, README.md
-dist\vPilotRelay-<version>.zip
-```
-
-If vPilot is in a different folder: `build.ps1 -VpilotDir "D:\vPilot"`
-
-The version number lives in `Directory.Build.props` (shared by the plugin and the setup wizard).
-
-To build only the plugin: `dotnet build vPilotRelay.csproj -c Release`
-
-### Project layout
-
-| File | Purpose |
-|---|---|
-| `Main.cs` | Plugin entry point (`IPlugin`), vPilot events, controller list |
-| `Bot.cs` | Telegram menu, buttons, commands, reply routing |
-| `TelegramClient.cs` | Telegram Bot API (long polling, sending/editing messages) |
-| `SimRadio.cs` | SimConnect: COM frequencies, squawk, aircraft state |
-| `Settings.cs` | Reads `vPilotRelay.ini`, recent connections (`vPilotRelay.recent`) |
-| `Installer\` | Setup wizard (WPF, single `.exe`; plugin DLL and ini template embedded) |
-| `Installer\MainWindow.xaml(.cs)` | Wizard pages and flow |
-| `Installer\TelegramApi.cs` | Token check (`getMe`), Chat ID detection (`getUpdates`), test message |
-| `Installer\Vpilot.cs`, `Installer\Payload.cs` | Finding/closing vPilot, copying the plugin, writing the ini while keeping existing settings |
-| `Installer\Assets\make-assets.ps1` | Generates the wizard's images and icon from the original logos (not in this repository; the generated images are) |
-
----
-
-## License
-
-Copyright © 2026 AG Simulations
-
-vPilot Relay is free software: you can redistribute it and/or modify it under the terms of the
-GNU General Public License as published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version. It is distributed in the hope that it will be useful,
-but **without any warranty**; see the [LICENSE](LICENSE) file for details.
+<details>
+<summary>Additional permission, trademarks and disclaimer</summary>
 
 **Additional permission under GNU GPL version 3 section 7:** if you modify this program, or any
 covered work, by linking or combining it with the vPilot plugin API (`RossCarlson.Vatsim.Vpilot.Plugins`),
@@ -265,8 +145,8 @@ grants you additional permission to convey the resulting work.
 AG Simulations and are **not** covered by the GPL. If you distribute a modified version, please use
 your own name and artwork.
 
+This program is distributed in the hope that it will be useful, but **without any warranty**.
 vPilot is developed by Ross Carlson; this project is not affiliated with vPilot, VATSIM or Telegram.
+Inspired by [blt950/vPilot-Pushover](https://github.com/blt950/vPilot-Pushover).
 
----
-
-Inspired by [blt950/vPilot-Pushover](https://github.com/blt950/vPilot-Pushover)
+</details>
